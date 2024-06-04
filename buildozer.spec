@@ -37,7 +37,7 @@ version = 0.1
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = opencv,python3,kivy,kivymd,numpy,tflite-runtime,Pillow,https://github.com/kivymd/KivyMD/archive/master.zip
+requirements = xcamera,opencv,python3,kivy,kivymd,numpy,tflite-runtime,Pillow,https://github.com/kivymd/KivyMD/archive/master.zip
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -50,7 +50,7 @@ requirements = opencv,python3,kivy,kivymd,numpy,tflite-runtime,Pillow,https://gi
 #icon.filename = %(source.dir)s/data/icon.png
 
 # (str) Supported orientation (one of landscape, sensorLandscape, portrait or all)
-orientation = portrait
+orientation = landscape
 
 # (list) List of service to declare
 services = NAME:ENTRYPOINT_TO_PY,NAME2:ENTRYPOINT2_TO_PY
@@ -73,7 +73,7 @@ osx.kivy_version = 1.9.1
 #
 
 # (bool) Indicate if the application should be fullscreen or not
-fullscreen = 1
+fullscreen = 0
 
 # (string) Presplash background color (for android toolchain)
 # Supported formats are: #RRGGBB #AARRGGBB or one of the following names:
