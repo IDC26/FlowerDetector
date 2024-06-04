@@ -27,23 +27,26 @@ def preprocess_image(path, input_shape):
     image = Image.open(path)
     image = image.resize((img_height, img_width))
     image = np.array(image, dtype=np.float32)
-    image = np.expand_dims(image, 0)  # Add batch dimension
+    image = np.expand_dims(image, 0)  # Adaugam dimensiunea batch-ului
     return image
 
 class Gallery(Screen):
     def __init__(self, **kwargs):
+        ' constructorul clasei '
         super(Gallery, self).__init__(**kwargs)
         self.file_manager = None
         self.manager_open = False
         self.interpreter = None
 
     def file_manager_open(self):
+        'functia de deschidere a file manager-ului '
         if not self.file_manager:
             self.file_manager = MDFileManager(
                 exit_manager=self.exit_manager, select_path=self.select_path)
 
             self.file_manager.exit_manager = self.exit_manager
             self.file_manager.select_path = self.select_path
+            'functia android de deschidere a file manager-ului '
         if platform == "android":
             self.file_manager.show('/storage/emulated/0/Download')
             self.manager_open = True
@@ -52,7 +55,7 @@ class Gallery(Screen):
             self.manager_open = True
 
     def select_path(self, path):
-        print("Selected path:", path)
+        print("path-ul selectat este", path)
         image = self.preprocess_and_classify(path)
         if image is not None:
             predicted_class, confidence = self.classify_image(image)
@@ -60,17 +63,18 @@ class Gallery(Screen):
                 class_names = ['margaretă', 'păpădie', 'trandafiri', 'floare-soarelui', 'lalele']
                 predicted_class_name = class_names[predicted_class]
 
-                popup = Popup(title='Classification Result',
+                popup = Popup(title='Rezultatul clasificarii',
                               content=Label(text=f'Clasa prezisa: {predicted_class_name}\nProbabilitate: {confidence:.2f}%'),
                               size_hint=(None, None), size=(400, 200))
                 popup.open()
                 print(predicted_class_name)
             else:
-                print("Image could not be classified with sufficient confidence.")
+                print("imaginea nu a putut fi clasificata.")
         else:
-            print("Failed to preprocess image.")
+            print("imaginea nu a putut fi preprocesata.")
 
     def preprocess_and_classify(self, path):
+        ' preprocesam imaginea '
         if not self.interpreter:
             self.interpreter = tflite.Interpreter(model_path="flori.tflite")
             self.interpreter.allocate_tensors()
@@ -79,23 +83,25 @@ class Gallery(Screen):
         return preprocess_image(path, input_shape)
 
     def classify_image(self, image):
+        ' clasificam imaginea '
         input_details = self.interpreter.get_input_details()
         output_details = self.interpreter.get_output_details()
-
+        ' setam inputul '
         self.interpreter.set_tensor(input_details[0]['index'], image)
         self.interpreter.invoke()
-
+        ' obtinem probabilitatile '
         predictions_lite = self.interpreter.get_tensor(output_details[0]['index'])
         score_lite = self.softmax(predictions_lite[0])
-
+        ' probabilitatea maxima '
         if np.max(score_lite) >= 0.2:
             predicted_class_index = np.argmax(score_lite)
             confidence = 100 * np.max(score_lite)
-            return predicted_class_index, confidence  # Return predicted class and confidence
+            return predicted_class_index, confidence
         else:
-            return None, None  # Return None for both predicted class and confidence
+            return None, None
 
     def softmax(self, x):
+        ' functia softmax '
         e_x = np.exp(x - np.max(x))
         return e_x / e_x.sum()
 
