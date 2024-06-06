@@ -1,0 +1,15 @@
+<CameraClick>:
+    BoxLayout:
+        orientation: 'vertical'
+
+        canvas.before:
+            PushMatrix
+            Rotate:
+                angle: -90
+                origin: self.center
+        canvas.after:
+            PopMatrix
+
+        XCamera:
+            id: camera
+            play: True
