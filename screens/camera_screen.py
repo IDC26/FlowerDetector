@@ -20,6 +20,7 @@ class CameraClick(Screen):
         self.capture_button = Button(text='Fa poza', size_hint_y=None, height='48dp')
         self.capture_button.bind(on_press=self.capture)
         self.layout.add_widget(self.capture_button)
+
     def toggle_camera(self, instance):
         self.camera.play = not self.camera.play
         self.toggle_button.text = 'Opreste Camera' if self.camera.play else 'Porneste Camera'
@@ -34,7 +35,17 @@ class CameraClick(Screen):
 
         self.camera.export_to_png(filepath)
         image = cv2.imread(filepath)
-        image = cv2.cvtColor(image, cv2.COLOR_BGRA2BGR)  # converteste imaginea din format BGRA la BGR
+        
+        # Show the dimensions before conversion
+        print("Dimensions before conversion:", image.shape)
+        print(filepath)
+        
+        # Ensure the image is in RGB format
+        #image = cv2.cvtColor(image, cv2.COLOR_BGRA2RGB)  # Convert from BGR (OpenCV default) to RGB
+        
+        # Show the dimensions after conversion
+        print("Dimensions after conversion:", image.shape)
+        
         cv2.imwrite(filepath, image)
         print("Poza salvata cu succes!")
         print(filepath)

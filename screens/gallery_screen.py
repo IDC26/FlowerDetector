@@ -40,7 +40,7 @@ class Gallery(Screen):
             self.file_manager = MDFileManager(
                 exit_manager=self.exit_manager, select_path=self.select_path)
         if platform == "android":
-            self.file_manager.show('/storage/emulated/0/Download')
+            self.file_manager.show('/storage/emulated/0/Download/pozeapp/')
         else:
             self.file_manager.show('/')
 

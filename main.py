@@ -11,7 +11,7 @@ class AplicatieFlori(MDApp):
     def build(self):
         self.sm = ScreenManager()
         self.sm.add_widget(MainScreen(name='main_screen'))
-        #self.sm.add_widget(CameraClick(name='camera_screen'))
+        self.sm.add_widget(CameraClick(name='camera_screen'))
         self.sm.add_widget(Gallery(name='gallery_screen'))
         return self.sm
 
