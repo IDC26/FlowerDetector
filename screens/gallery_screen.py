@@ -64,6 +64,13 @@ class Gallery(Screen):
                 popup.open()
                 print(predicted_class_name)
             else:
+                popup = Popup(
+                    title='Rezultatul clasificarii',
+                    content=Label(text=f'Imaginea nu a putut fi clasificata'),
+                    size_hint=(None, None), size=(400, 200)
+                )
+                popup.bind(on_dismiss=self.return_to_main)
+                popup.open()
                 print("Imaginea nu a putut fi clasificata.")
         else:
             print("Imaginea nu a putut fi preprocesata.")
@@ -83,7 +90,7 @@ class Gallery(Screen):
         self.interpreter.invoke()
         predictions_lite = self.interpreter.get_tensor(output_details[0]['index'])
         score_lite = self.softmax(predictions_lite[0])
-        if np.max(score_lite) >= 0.2:
+        if np.max(score_lite) >= 0.85:
             predicted_class_index = np.argmax(score_lite)
             confidence = 100 * np.max(score_lite)
             return predicted_class_index, confidence
