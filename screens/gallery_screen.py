@@ -7,7 +7,7 @@ from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import Screen, ScreenManager
 from kivymd.uix.filemanager import MDFileManager
 from kivy.utils import platform
-
+import os
 # KV String
 Builder.load_string("""
 <Gallery>:
@@ -47,6 +47,7 @@ class Gallery(Screen):
         self.manager_open = True
 
     def select_path(self, path):
+        image_name = os.path.basename(path)
         print("Selected path:", path)
         image = self.preprocess_and_classify(path)
         if image is not None:
@@ -57,7 +58,7 @@ class Gallery(Screen):
 
                 popup = Popup(
                     title='Rezultatul clasificarii',
-                    content=Label(text=f'Clasa prezisa: {predicted_class_name}\nProbabilitate: {confidence:.2f}%'),
+                    content=Label(text=f'Imaginea: {image_name}\nClasa prezisa: {predicted_class_name}\nProbabilitate: {confidence:.2f}%'),
                     size_hint=(None, None), size=(400, 200)
                 )
                 popup.bind(on_dismiss=self.return_to_main)
@@ -90,7 +91,7 @@ class Gallery(Screen):
         self.interpreter.invoke()
         predictions_lite = self.interpreter.get_tensor(output_details[0]['index'])
         score_lite = self.softmax(predictions_lite[0])
-        if np.max(score_lite) >= 0.85:
+        if np.max(score_lite) >= 0.4:
             predicted_class_index = np.argmax(score_lite)
             confidence = 100 * np.max(score_lite)
             return predicted_class_index, confidence
