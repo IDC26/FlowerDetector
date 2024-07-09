@@ -7,7 +7,10 @@ from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import Screen, ScreenManager
 from kivymd.uix.filemanager import MDFileManager
 from kivy.utils import platform
+from kivy.uix.image import Image as KivyImage
+from kivy.uix.boxlayout import BoxLayout
 import os
+
 # KV String
 Builder.load_string("""
 <Gallery>:
@@ -56,10 +59,16 @@ class Gallery(Screen):
                 class_names = ['margaretă', 'păpădie', 'trandafiri', 'floare-soarelui', 'lalele']
                 predicted_class_name = class_names[predicted_class]
 
+                box = BoxLayout(orientation='vertical')
+                preview = KivyImage(source=path, size_hint=(1, 0.7))
+                label = Label(text=f'Imaginea: {image_name}\nClasa prezisa: {predicted_class_name}\nProbabilitate: {confidence:.2f}%', size_hint=(1, 0.3))
+                box.add_widget(preview)
+                box.add_widget(label)
+
                 popup = Popup(
                     title='Rezultatul clasificarii',
-                    content=Label(text=f'Imaginea: {image_name}\nClasa prezisa: {predicted_class_name}\nProbabilitate: {confidence:.2f}%'),
-                    size_hint=(None, None), size=(400, 200)
+                    content=box,
+                    size_hint=(None, None), size=(800, 600)
                 )
                 popup.bind(on_dismiss=self.return_to_main)
                 popup.open()
@@ -68,7 +77,7 @@ class Gallery(Screen):
                 popup = Popup(
                     title='Rezultatul clasificarii',
                     content=Label(text=f'Imaginea nu a putut fi clasificata'),
-                    size_hint=(None, None), size=(400, 200)
+                    size_hint=(None, None), size=(600, 400)
                 )
                 popup.bind(on_dismiss=self.return_to_main)
                 popup.open()
